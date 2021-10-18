@@ -1,0 +1,108 @@
+{
+	"name": "scriptcat-vscode",
+	"displayName": "scriptcat-vscode",
+	"description": "tampermonkey,userscript,scriptcat辅助开发扩展",
+	"version": "0.1.0",
+	"publisher": "CodFrm",
+	"keywords": [
+		"userscript",
+		"Scriptcat",
+		"Tampermonkey",
+		"Greasemonkey"
+	],
+	"engines": {
+		"vscode": "^1.61.0"
+	},
+	"categories": [
+		"Debuggers",
+		"Programming Languages"
+	],
+	"activationEvents": [
+		"onLanguage:javascript"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"snippets": [
+			{
+				"language": "javascript",
+				"path": "./snippets/scriptcat.json"
+			}
+		],
+		"debuggers": [
+			{
+				"type": "scriptcat",
+				"languages": [
+					"javascript"
+				],
+				"label": "Userscript Debug",
+				"program": "./out/debugAdapter.js",
+				"runtime": "node",
+				"configurationAttributes": {
+					"launch": {
+						"required": [
+							"program"
+						],
+						"properties": {
+							"program": {
+								"type": "string",
+								"description": "用户脚本文件路径",
+								"default": "${file}"
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"type": "scriptcat",
+						"request": "launch",
+						"name": "Debug Userscript for Scriptcat",
+						"program": "${file}",
+						"stopOnEntry": true
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Userscript Debug: Launch",
+						"description": "配置一个用户脚本调试",
+						"body": {
+							"type": "scriptcat",
+							"request": "launch",
+							"name": "Debug Userscript for Scriptcat",
+							"program": "^\"\\${file}\""
+						}
+					}
+				]
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p -w . --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.4",
+		"@types/mocha": "^9.0.0",
+		"@types/node": "14.x",
+		"@types/vscode": "^1.61.0",
+		"@typescript-eslint/eslint-plugin": "^4.31.1",
+		"@typescript-eslint/parser": "^4.31.1",
+		"@vscode/test-electron": "^1.6.2",
+		"eslint": "^7.32.0",
+		"glob": "^7.1.7",
+		"mocha": "^9.1.1",
+		"ts-loader": "^9.2.5",
+		"typescript": "^4.4.3",
+		"webpack": "^5.52.1",
+		"webpack-cli": "^4.8.0"
+	},
+	"dependencies": {
+		"vscode-debugadapter": "^1.49.0"
+	}
+}
