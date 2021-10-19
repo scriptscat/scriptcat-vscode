@@ -1,24 +1,15 @@
+import { watchFile } from 'fs';
 import * as vscode from 'vscode';
-import { ProviderResult } from 'vscode';
-import { ScriptCatDebugSession } from './mockDebug';
-import { FileAccessor } from './mockRuntime';
 import { metaProvideHover } from './provide';
+import { Synchronizer } from './sync';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(metaProvideHover());
 
-	// 注册调试器
-	const factory = new InlineDebugAdapterFactory();
-	context.subscriptions.push(vscode.debug.registerDebugAdapterDescriptorFactory('scriptcat', factory));
+	const watcher = vscode.workspace.createFileSystemWatcher("**/*.user.js", false, false, false);
+
+	new Synchronizer(8642, watcher);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
-
-
-class InlineDebugAdapterFactory implements vscode.DebugAdapterDescriptorFactory {
-
-	createDebugAdapterDescriptor(_session: vscode.DebugSession): ProviderResult<vscode.DebugAdapterDescriptor> {
-		return new vscode.DebugAdapterInlineImplementation(new ScriptCatDebugSession());
-	}
-}

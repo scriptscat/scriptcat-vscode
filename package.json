@@ -27,52 +27,6 @@
 				"language": "javascript",
 				"path": "./snippets/scriptcat.json"
 			}
-		],
-		"debuggers": [
-			{
-				"type": "scriptcat",
-				"languages": [
-					"javascript"
-				],
-				"label": "Userscript Debug",
-				"program": "./out/debugAdapter.js",
-				"runtime": "node",
-				"configurationAttributes": {
-					"launch": {
-						"required": [
-							"program"
-						],
-						"properties": {
-							"program": {
-								"type": "string",
-								"description": "用户脚本文件路径",
-								"default": "${file}"
-							}
-						}
-					}
-				},
-				"initialConfigurations": [
-					{
-						"type": "scriptcat",
-						"request": "launch",
-						"name": "Debug Userscript for Scriptcat",
-						"program": "${file}",
-						"stopOnEntry": true
-					}
-				],
-				"configurationSnippets": [
-					{
-						"label": "Userscript Debug: Launch",
-						"description": "配置一个用户脚本调试",
-						"body": {
-							"type": "scriptcat",
-							"request": "launch",
-							"name": "Debug Userscript for Scriptcat",
-							"program": "^\"\\${file}\""
-						}
-					}
-				]
-			}
 		]
 	},
 	"scripts": {
@@ -91,6 +45,7 @@
 		"@types/mocha": "^9.0.0",
 		"@types/node": "14.x",
 		"@types/vscode": "^1.61.0",
+		"@types/ws": "^8.2.0",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
 		"@vscode/test-electron": "^1.6.2",
@@ -103,6 +58,7 @@
 		"webpack-cli": "^4.8.0"
 	},
 	"dependencies": {
-		"vscode-debugadapter": "^1.49.0"
+		"vscode-debugadapter": "^1.49.0",
+		"ws": "^8.2.3"
 	}
 }
