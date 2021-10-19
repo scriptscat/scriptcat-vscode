@@ -6,7 +6,6 @@ import { WebSocket, WebSocketServer } from 'ws';
 export class Synchronizer {
 
 	protected wss: WebSocketServer;
-	protected clients = new Map<string, WebSocket>();
 
 	constructor(serverPort: number, watcher: vscode.FileSystemWatcher) {
 		watcher.onDidChange((ev) => { this.onChange(ev); });
@@ -15,13 +14,17 @@ export class Synchronizer {
 		// 建立ws服务
 		this.wss = new WebSocketServer({
 			port: serverPort,
-		}, () => {
-			console.log(this.wss);
 		});
 
 		this.wss.on('connection', ws => {
 			ws.send('hello');
 		});
+
+		setInterval(() => {
+			this.wss.clients.forEach(val => {
+				val.ping();
+			});
+		}, 6e4);
 	}
 
 	protected onChange(e: vscode.Uri) {
