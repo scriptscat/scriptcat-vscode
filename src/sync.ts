@@ -17,7 +17,7 @@ export class Synchronizer {
 		});
 
 		this.wss.on('connection', ws => {
-			ws.send('hello');
+			ws.send('{"action":"hello"}');
 		});
 
 		setInterval(() => {
