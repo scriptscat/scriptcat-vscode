@@ -33,7 +33,7 @@ export class Synchronizer {
 		}
 		let code = readFileSync(e.fsPath).toString();
 		this.wss.clients.forEach((val, key) => {
-			val.send(JSON.stringify({ "action": "onchange", "data": { "script": code } }));
+			val.send(JSON.stringify({ "action": "onchange", "data": { "script": code, "uri": e.toString() } }));
 		});
 	}
 
