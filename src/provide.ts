@@ -15,7 +15,7 @@ export function metaProvideHover() {
 		provideHover(document, position, token) {
 			const line = document.lineAt(position.line);
 
-			let flag = /^\/\/\s*@(\w+?)\s+(.*?)$/.exec(line.text);
+			let flag = /^\/\/\s*@(\w+?)(\s+(.*?)|)$/.exec(line.text);
 			if (flag) {
 				return {
 					contents: [prompt[flag[1]]]
