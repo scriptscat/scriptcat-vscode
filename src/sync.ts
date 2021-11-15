@@ -20,6 +20,10 @@ export class Synchronizer {
 			ws.send('{"action":"hello"}');
 		});
 
+		this.wss.on('error', (error) => {
+			vscode.window.showWarningMessage("ScriptCat start failed:" + error.message);
+		});
+
 		setInterval(() => {
 			this.wss.clients.forEach(val => {
 				val.ping();

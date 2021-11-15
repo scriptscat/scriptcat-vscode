@@ -2,7 +2,7 @@
 	"name": "scriptcat-vscode",
 	"displayName": "scriptcat-vscode",
 	"description": "tampermonkey,userscript,scriptcat辅助开发扩展",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"publisher": "CodFrm",
 	"keywords": [
 		"userscript",
