@@ -27,7 +27,11 @@
 				"language": "javascript",
 				"path": "./snippets/scriptcat.json"
 			}
-		]
+		],
+        "commands": [{
+            "command": "scriptcat.target",
+            "title": "指定同步脚本路径"
+        }]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
