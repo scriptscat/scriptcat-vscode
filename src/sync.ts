@@ -6,10 +6,11 @@ import { WebSocket, WebSocketServer } from 'ws';
 export class Synchronizer {
 
 	protected wss: WebSocketServer;
+	protected watcher: vscode.FileSystemWatcher
 
 	constructor(serverPort: number, watcher: vscode.FileSystemWatcher) {
-		watcher.onDidChange((ev) => { this.onChange(ev); });
-		watcher.onDidCreate((ev) => { this.onChange(ev); });
+		this.watcher = watcher
+		this.updateFileWatcher()
 
 		// 建立ws服务
 		this.wss = new WebSocketServer({
@@ -41,4 +42,16 @@ export class Synchronizer {
 		});
 	}
 
+	private updateFileWatcher() {
+		this.watcher.onDidChange((ev) => {
+			vscode.window.showInformationMessage(ev.path+'更改已同步')
+			this.onChange(ev);
+		});
+		this.watcher.onDidCreate((ev) => { this.onChange(ev); });
+	}
+	public changeTargetScript(newWatcher: vscode.FileSystemWatcher) {
+		this.watcher.dispose()
+		this.watcher = newWatcher
+		this.updateFileWatcher()
+	}
 }
