@@ -1,68 +1,72 @@
 {
-	"name": "scriptcat-vscode",
-	"displayName": "scriptcat-vscode",
-	"description": "tampermonkey,userscript,scriptcat辅助开发扩展",
-	"version": "0.1.3",
-	"publisher": "CodFrm",
-	"keywords": [
-		"userscript",
-		"Scriptcat",
-		"Tampermonkey",
-		"Greasemonkey"
-	],
-	"engines": {
-		"vscode": "^1.61.0"
-	},
-	"categories": [
-		"Debuggers",
-		"Programming Languages"
-	],
-	"activationEvents": [
-		"onLanguage:javascript"
-	],
-	"main": "./dist/extension.js",
-	"contributes": {
-		"snippets": [
-			{
-				"language": "javascript",
-				"path": "./snippets/scriptcat.json"
-			}
-		],
-        "commands": [{
-            "command": "scriptcat.target",
-            "title": "指定同步脚本路径"
-        }]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run package",
-		"compile": "webpack",
-		"watch": "webpack --watch",
-		"package": "webpack --mode production --devtool hidden-source-map",
-		"compile-tests": "tsc -p . --outDir out",
-		"watch-tests": "tsc -p -w . --outDir out",
-		"pretest": "npm run compile-tests && npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.4",
-		"@types/mocha": "^9.0.0",
-		"@types/node": "14.x",
-		"@types/vscode": "^1.61.0",
-		"@types/ws": "^8.2.0",
-		"@typescript-eslint/eslint-plugin": "^4.31.1",
-		"@typescript-eslint/parser": "^4.31.1",
-		"@vscode/test-electron": "^1.6.2",
-		"eslint": "^7.32.0",
-		"glob": "^7.1.7",
-		"mocha": "^9.1.1",
-		"ts-loader": "^9.2.5",
-		"typescript": "^4.4.3",
-		"webpack": "^5.52.1",
-		"webpack-cli": "^4.8.0"
-	},
-	"dependencies": {
-		"vscode-debugadapter": "^1.49.0",
-		"ws": "^8.2.3"
-	}
+  "name": "scriptcat-vscode",
+  "displayName": "scriptcat-vscode",
+  "description": "tampermonkey,userscript,scriptcat辅助开发扩展",
+  "repository": "https://github.com/scriptscat/scriptcat-vscode",
+  "version": "0.2.0",
+  "publisher": "CodFrm",
+  "icon": "icons/logo.png",
+  "keywords": [
+    "userscript",
+    "Scriptcat",
+    "Tampermonkey",
+    "Greasemonkey"
+  ],
+  "engines": {
+    "vscode": "^1.61.0"
+  },
+  "categories": [
+    "Debuggers",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "javascript",
+        "path": "./snippets/scriptcat.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "scriptcat.target",
+        "title": "指定同步脚本路径"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p -w . --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.61.0",
+    "@types/ws": "^8.2.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "@vscode/test-electron": "^1.6.2",
+    "eslint": "^7.32.0",
+    "glob": "^7.1.7",
+    "mocha": "^9.1.1",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3",
+    "webpack": "^5.52.1",
+    "webpack-cli": "^4.8.0"
+  },
+  "dependencies": {
+    "vscode-debugadapter": "^1.49.0",
+    "ws": "^8.2.3"
+  }
 }
