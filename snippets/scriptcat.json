@@ -1,6 +1,6 @@
 {
 	"userscript": {
-		"prefix": "userscript",
+		"prefix": "userscript 油猴用户脚本",
 		"body": [
 			"// ==UserScript==",
 			"// @name         New Userscript",
@@ -15,7 +15,7 @@
 		"description": "油猴用户脚本"
 	},
 	"backgroundscript": {
-		"prefix": "backgroundscript",
+		"prefix": "backgroundscript 脚本猫后台脚本",
 		"body": [
 			"// ==UserScript==",
 			"// @name         New Userscript",
@@ -34,7 +34,7 @@
 		"description": "脚本猫后台脚本"
 	},
 	"crontabscript": {
-		"prefix": "crontabscript",
+		"prefix": "crontabscript 脚本猫定时脚本",
 		"body": [
 			"// ==UserScript==",
 			"// @name         New Userscript",
