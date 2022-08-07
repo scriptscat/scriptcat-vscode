@@ -14,7 +14,6 @@ export function metaProvideHover() {
 	return vscode.languages.registerHoverProvider('javascript', {
 		provideHover(document, position, token) {
 			const line = document.lineAt(position.line);
-
 			let flag = /^\/\/\s*@(\w+?)(\s+(.*?)|)$/.exec(line.text);
 			if (flag) {
 				return {
