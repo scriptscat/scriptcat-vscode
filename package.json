@@ -3,7 +3,7 @@
   "displayName": "scriptcat-vscode",
   "description": "tampermonkey,userscript,scriptcat辅助开发扩展",
   "repository": "https://github.com/scriptscat/scriptcat-vscode",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "CodFrm",
   "icon": "icons/logo.png",
   "keywords": [

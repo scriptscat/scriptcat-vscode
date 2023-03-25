@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
   }
 
-  const mSync = new Synchronizer(8642, watcher);
+  const mSync = new Synchronizer(8642, watcher, context);
 
   context.subscriptions.push(
     vscode.commands.registerCommand(signatureFileCommand, () => {
@@ -60,20 +60,17 @@ export function activate(context: vscode.ExtensionContext) {
         }
       });
     }),
-    vscode.languages.registerDocumentFormattingEditProvider(
-      ["javascript"],
-      {
-        provideDocumentFormattingEdits(
-          document: vscode.TextDocument
-        ): vscode.TextEdit[] | undefined {
-          const firstLine = document.lineAt(0);
-          console.log(firstLine);
-          if (firstLine.text !== "42") {
-            return [vscode.TextEdit.insert(firstLine.range.start, "42\n")];
-          }
-        },
-      }
-    )
+    vscode.languages.registerDocumentFormattingEditProvider(["javascript"], {
+      provideDocumentFormattingEdits(
+        document: vscode.TextDocument
+      ): vscode.TextEdit[] | undefined {
+        const firstLine = document.lineAt(0);
+        console.log(firstLine);
+        if (firstLine.text !== "42") {
+          return [vscode.TextEdit.insert(firstLine.range.start, "42\n")];
+        }
+      },
+    })
   );
 }
 

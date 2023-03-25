@@ -5,9 +5,15 @@ import { WebSocketServer } from "ws";
 export class Synchronizer {
   protected wss: WebSocketServer;
   protected watcher: vscode.FileSystemWatcher;
+  protected context: vscode.ExtensionContext;
 
-  constructor(serverPort: number, watcher: vscode.FileSystemWatcher) {
+  constructor(
+    serverPort: number,
+    watcher: vscode.FileSystemWatcher,
+    context: vscode.ExtensionContext
+  ) {
     this.watcher = watcher;
+    this.context = context;
     this.updateFileWatcher();
 
     // 建立ws服务
@@ -58,7 +64,16 @@ export class Synchronizer {
   // 监听文件变动
   private updateFileWatcher() {
     this.watcher.onDidChange((ev) => {
-      vscode.window.showInformationMessage(ev.path + "更改已同步");
+      if (this.context.workspaceState.get("ignore_msg_" + ev.path)) {
+        return;
+      }
+      vscode.window
+        .showInformationMessage(ev.path + "更改已同步", "不再提示该文件")
+        .then((result) => {
+          if (result === "不再提示该文件") {
+            this.context.workspaceState.update("ignore_msg_" + ev.path, true);
+          }
+        });
       this.onChange(ev);
     });
     this.watcher.onDidCreate((ev) => {
