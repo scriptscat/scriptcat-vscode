@@ -64,6 +64,7 @@ export class Synchronizer {
   // 监听文件变动
   private updateFileWatcher() {
     this.watcher.onDidChange((ev) => {
+      this.onChange(ev);
       if (this.context.workspaceState.get("ignore_msg_" + ev.path)) {
         return;
       }
@@ -74,7 +75,6 @@ export class Synchronizer {
             this.context.workspaceState.update("ignore_msg_" + ev.path, true);
           }
         });
-      this.onChange(ev);
     });
     this.watcher.onDidCreate((ev) => {
       this.onChange(ev);
