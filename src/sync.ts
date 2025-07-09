@@ -1,48 +1,39 @@
 import { readFileSync } from "fs";
 import * as vscode from "vscode";
-import { WebSocketServer } from "ws";
+import GlobalWebSocketManager from "./globalWebSocketManager";
 
 export class Synchronizer {
-  protected wss: WebSocketServer;
   protected watcher: vscode.FileSystemWatcher;
   protected context: vscode.ExtensionContext;
+  private wsManager: GlobalWebSocketManager;
+  private messageHandler: (message: any) => void;
 
   constructor(
-    serverPort: number,
     watcher: vscode.FileSystemWatcher,
     context: vscode.ExtensionContext
   ) {
     this.watcher = watcher;
     this.context = context;
+    this.wsManager = GlobalWebSocketManager.getInstance();
+    
+    // 创建消息处理器
+    this.messageHandler = (message: any) => {
+      // 如果需要处理来自WebSocket的消息，可以在这里添加逻辑
+    };
+    
     this.updateFileWatcher();
+    this.initializeWebSocket();
+  }
 
-    // 建立ws服务
-    this.wss = new WebSocketServer({
-      port: serverPort,
-    });
-
-    // 建立连接
-    this.wss.on("connection", (ws, req) => {
-      ws.send('{"action":"hello"}');
-      vscode.window.showInformationMessage(req.socket.remoteAddress + "已连接");
-      ws.on("close", () => {
-        vscode.window.showInformationMessage(
-          req.socket.remoteAddress + "已断开"
-        );
-      });
-    });
-
-    this.wss.on("error", (error) => {
-      vscode.window.showWarningMessage(
-        "ScriptCat start failed:" + error.message
+  private async initializeWebSocket(): Promise<void> {
+    try {
+      await this.wsManager.start();
+      this.wsManager.addMessageHandler(this.messageHandler);
+    } catch (error: any) {
+      vscode.window.showErrorMessage(
+        `无法启动WebSocket服务: ${error.message}`
       );
-    });
-
-    setInterval(() => {
-      this.wss.clients.forEach((val) => {
-        val.ping();
-      });
-    }, 6e4);
+    }
   }
 
   // 文件变动后发送ws消息通知ScriptCat更新脚本
@@ -50,14 +41,13 @@ export class Synchronizer {
     if (e.scheme !== "file") {
       return;
     }
+    if (!this.wsManager.isRunning()) {
+      return;
+    }
     let code = readFileSync(e.fsPath).toString();
-    this.wss.clients.forEach((val, key) => {
-      val.send(
-        JSON.stringify({
-          action: "onchange",
-          data: { script: code, uri: e.toString() },
-        })
-      );
+    this.wsManager.broadcast({
+      action: "onchange",
+      data: { script: code, uri: e.toString() },
     });
   }
 
@@ -85,5 +75,15 @@ export class Synchronizer {
     this.watcher.dispose();
     this.watcher = newWatcher;
     this.updateFileWatcher();
+  }
+
+  // 获取实际使用的端口号
+  public getActualPort(): number {
+    return this.wsManager.getPort();
+  }
+
+  // 关闭资源（移除消息处理器）
+  public close(): void {
+    this.wsManager.removeMessageHandler(this.messageHandler);
   }
 }

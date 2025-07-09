@@ -8,6 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
   let watcher = null;
 
   const signatureFileCommand = "scriptcat.target";
+  const autoTargetCommand = "scriptcat.autoTarget";
   const config = context.workspaceState.get<string>("target");
 
   // 如果事先在当前工作区指定过目标脚本，则不再扫描目录下是否存在符合约定的脚本
@@ -35,7 +36,14 @@ export function activate(context: vscode.ExtensionContext) {
     );
   }
 
-  const mSync = new Synchronizer(8642, watcher, context);
+  const mSync = new Synchronizer(watcher, context);
+
+  // 将同步器添加到订阅中，以便在扩展停用时正确清理
+  context.subscriptions.push({
+    dispose: () => {
+      mSync.close();
+    }
+  });
 
   context.subscriptions.push(
     vscode.commands.registerCommand(signatureFileCommand, () => {
@@ -59,6 +67,22 @@ export function activate(context: vscode.ExtensionContext) {
           );
         }
       });
+    }),
+    vscode.commands.registerCommand(autoTargetCommand, () => {
+      // 清除已保存的目标脚本路径
+      context.workspaceState.update("target", undefined);
+      
+      // 切换回自动识别模式，监控所有 *.user.js 文件
+      const autoWatcher = vscode.workspace.createFileSystemWatcher(
+        "**/*.user.js",
+        false,
+        false,
+        false
+      );
+      
+      mSync.changeTargetScript(autoWatcher);
+      
+      vscode.window.showInformationMessage("已切换到自动识别模式，将监控所有 *.user.js 文件");
     }),
     vscode.languages.registerDocumentFormattingEditProvider(["javascript"], {
       provideDocumentFormattingEdits(
