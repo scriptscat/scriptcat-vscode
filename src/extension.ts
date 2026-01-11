@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
 import { metaProvideHover } from "./provide";
 import { Synchronizer } from "./sync";
+import { registerUserScriptHighlighter } from "./highlight/userScriptHighlighter";
+import { checkAndPromptSemanticHighlighting } from "./highlight/semanticHighlighting";
+import { registerUserScriptDiagnostics } from "./highlight/userScriptDiagnostics";
 import { existsSync, fstat } from "fs";
 import "fs";
 
@@ -44,6 +47,15 @@ export function activate(context: vscode.ExtensionContext) {
       mSync.close();
     }
   });
+
+  // 注册 UserScript 元数据高亮
+  context.subscriptions.push(registerUserScriptHighlighter());
+
+  // 注册 UserScript 元数据诊断
+  context.subscriptions.push(...registerUserScriptDiagnostics());
+
+  // 检查并提示用户启用语义高亮
+  checkAndPromptSemanticHighlighting();
 
   context.subscriptions.push(
     vscode.commands.registerCommand(signatureFileCommand, () => {

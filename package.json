@@ -30,6 +30,16 @@
         "path": "./snippets/scriptcat.json"
       }
     ],
+    "semanticTokenScopes": [
+      {
+        "language": "javascript",
+        "scopes": {
+          "metadata": ["markup.bold"],
+          "metaKey": ["entity.name.function", "keyword.control"],
+          "metaValue": ["string"]
+        }
+      }
+    ],
     "commands": [
       {
         "command": "scriptcat.target",
