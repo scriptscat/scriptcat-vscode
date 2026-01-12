@@ -35,12 +35,6 @@ const VALID_META_KEYS = new Set([
   "noframes",
   "connect",
   "run-at",
-
-  // Greasemonkey 4.x
-  "grant",
-
-  // ScriptCat 特有
-  "noframes",
   "unwrap",
 
   // 其他常见键名
@@ -77,8 +71,8 @@ function levenshteinDistance(a: string, b: string): number {
       } else {
         matrix[i][j] = Math.min(
           matrix[i - 1][j - 1] + 1, // 替换
-          matrix[i][j - 1] + 1, // 插入
-          matrix[i][j - 1] + 1 // 删除
+          matrix[i][j - 1] + 1,     // 插入
+          matrix[i - 1][j] + 1      // 删除
         );
       }
     }
@@ -95,7 +89,7 @@ function findSimilarKeys(invalidKey: string): string[] {
 
   for (const validKey of VALID_META_KEYS) {
     const distance = levenshteinDistance(invalidKey.toLowerCase(), validKey.toLowerCase());
-    // 只保留编辑距离较小的建议（最多 2 个字符差异）
+    // 只保留编辑距离较小的建议（最多 3 个字符差异）
     if (distance <= 3 && distance > 0) {
       suggestions.push({ key: validKey, distance });
     }
