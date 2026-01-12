@@ -106,6 +106,18 @@ export function activate(context: vscode.ExtensionContext) {
           return [vscode.TextEdit.insert(firstLine.range.start, "42\n")];
         }
       },
+    }),
+    vscode.commands.registerCommand('scriptcat.debug', () => {
+      const debugInfo = mSync.getDebugInfo();
+      const message = `调试信息:
+窗口角色: ${debugInfo.isWebSocketOwner ? '主窗口' : '从窗口'}
+WebSocket状态: ${debugInfo.wsManagerRunning ? '运行中' : '未运行'}
+端口: ${debugInfo.wsManagerPort}
+共享目录: ${debugInfo.sharedDir}
+共享目录存在: ${debugInfo.sharedDirExists}`;
+      
+      vscode.window.showInformationMessage(message, { modal: true });
+      console.log('ScriptCat调试信息:', debugInfo);
     })
   );
 }

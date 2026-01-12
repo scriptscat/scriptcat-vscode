@@ -38,15 +38,27 @@ export class Synchronizer {
   private async initializeWebSocket(): Promise<void> {
     try {
       const port = await this.wsManager.start();
-      // 如果返回的端口等于8642，说明当前窗口成功启动了WebSocket服务器
+      // 如果返回的端口等于8642，并且WebSocket服务器确实在运行，说明当前窗口成功启动了服务器
       this.isWebSocketOwner = (port === 8642 && this.wsManager.isRunning());
       this.wsManager.addMessageHandler(this.messageHandler);
+      
+      if (this.isWebSocketOwner) {
+        vscode.window.showInformationMessage(
+          `ScriptCat WebSocket服务已启动，端口: ${port} (主窗口)`
+        );
+      } else {
+        vscode.window.showInformationMessage(
+          `ScriptCat WebSocket服务已在其他窗口运行，当前窗口将使用文件通信模式 (从窗口)`
+        );
+      }
+      
+      console.log(`窗口角色: ${this.isWebSocketOwner ? '主窗口' : '从窗口'}, 端口: ${port}`);
     } catch (error: any) {
       if (error.message.includes('EADDRINUSE')) {
         // 端口被占用，说明其他窗口已经启动了WebSocket服务器
         this.isWebSocketOwner = false;
         vscode.window.showInformationMessage(
-          `ScriptCat WebSocket服务已在其他窗口运行，当前窗口将使用文件通信模式`
+          `ScriptCat WebSocket服务已在其他窗口运行，当前窗口将使用文件通信模式 (从窗口)`
         );
       } else {
         vscode.window.showErrorMessage(
@@ -68,12 +80,16 @@ export class Synchronizer {
       data: { script: code, uri: e.toString() },
     };
 
+    console.log(`文件变更: ${e.fsPath}, 窗口角色: ${this.isWebSocketOwner ? '主窗口' : '从窗口'}`);
+
     if (this.isWebSocketOwner && this.wsManager.isRunning()) {
       // 当前窗口拥有WebSocket服务器，直接广播
       this.wsManager.broadcast(message);
+      console.log('直接通过WebSocket广播消息');
     } else {
       // 其他窗口拥有WebSocket服务器，通过文件通信
       this.sendMessageViaFile(message);
+      console.log('通过文件通信发送消息');
     }
   }
 
@@ -83,18 +99,23 @@ export class Synchronizer {
       const messageFile = path.join(this.sharedDir, `message-${Date.now()}-${Math.random()}.json`);
       writeFileSync(messageFile, JSON.stringify(message));
       
+      console.log(`已创建消息文件: ${messageFile}`);
+      console.log(`消息内容: ${JSON.stringify(message)}`);
+      
       // 设置定时器删除文件，避免积累太多文件
       setTimeout(() => {
         try {
           if (existsSync(messageFile)) {
             require('fs').unlinkSync(messageFile);
+            console.log(`已清理消息文件: ${messageFile}`);
           }
         } catch (err) {
-          // 忽略删除错误
+          console.warn(`清理消息文件失败: ${messageFile}`, err);
         }
       }, 5000);
     } catch (error) {
       console.warn('无法通过文件发送消息:', error);
+      vscode.window.showWarningMessage(`文件通信失败: ${error}`);
     }
   }
 
@@ -127,6 +148,17 @@ export class Synchronizer {
   // 获取实际使用的端口号
   public getActualPort(): number {
     return this.wsManager.getPort();
+  }
+
+  // 调试方法：获取当前状态信息
+  public getDebugInfo(): any {
+    return {
+      isWebSocketOwner: this.isWebSocketOwner,
+      wsManagerRunning: this.wsManager.isRunning(),
+      wsManagerPort: this.wsManager.getPort(),
+      sharedDir: this.sharedDir,
+      sharedDirExists: existsSync(this.sharedDir)
+    };
   }
 
   // 关闭资源（移除消息处理器）

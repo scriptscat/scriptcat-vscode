@@ -98,16 +98,19 @@ class GlobalWebSocketManager {
     // 首先检查是否已有其他窗口启动了服务器
     const existingPort = await this.checkExistingServer();
     if (existingPort) {
+      console.log(`检测到已存在的WebSocket服务器，端口: ${existingPort}`);
       vscode.window.showInformationMessage(
-        `ScriptCat WebSocket服务已在其他窗口启动，端口: ${existingPort}`
+        `ScriptCat WebSocket服务已在其他窗口启动，端口: ${existingPort} (从窗口)`
       );
       return existingPort;
     }
 
     if (this.isStarted && this.wss) {
+      console.log(`WebSocket服务器已在当前窗口运行，端口: ${this.port}`);
       return this.port;
     }
 
+    console.log(`尝试启动WebSocket服务器，端口: ${this.port}`);
     return new Promise((resolve, reject) => {
       try {
         this.wss = new WebSocketServer({
@@ -128,6 +131,7 @@ class GlobalWebSocketManager {
         });
 
         this.wss.on("error", (error) => {
+          console.error('WebSocket服务器错误:', error);
           vscode.window.showWarningMessage(
             "ScriptCat start failed:" + error.message
           );
@@ -139,6 +143,7 @@ class GlobalWebSocketManager {
           // 写入端口文件，标记服务器已启动
           try {
             fs.writeFileSync(this.portFilePath, this.port.toString());
+            console.log(`已创建端口标记文件: ${this.portFilePath}`);
           } catch (err) {
             console.warn('无法写入端口文件:', err);
           }
@@ -147,8 +152,9 @@ class GlobalWebSocketManager {
           this.setupFileWatcher();
           
           vscode.window.showInformationMessage(
-            `ScriptCat WebSocket服务已启动，端口: ${this.port}`
+            `ScriptCat WebSocket服务已启动，端口: ${this.port} (主窗口)`
           );
+          console.log(`WebSocket服务器已启动，端口: ${this.port}`);
           resolve(this.port);
         });
 
@@ -162,6 +168,7 @@ class GlobalWebSocketManager {
         }, 60000);
 
       } catch (error) {
+        console.error('启动WebSocket服务器失败:', error);
         reject(error);
       }
     });
@@ -242,24 +249,31 @@ class GlobalWebSocketManager {
    * 设置文件监听，处理其他窗口发送的消息
    */
   private setupFileWatcher(): void {
-    this.fileWatcher = vscode.workspace.createFileSystemWatcher(
-      path.join(this.sharedDir, 'message-*.json')
-    );
+    // 使用正确的glob模式监听消息文件
+    const pattern = new vscode.RelativePattern(this.sharedDir, 'message-*.json');
+    this.fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
 
     this.fileWatcher.onDidCreate((uri) => {
-      try {
-        // 读取消息文件
-        const messageContent = fs.readFileSync(uri.fsPath, 'utf8');
-        const message = JSON.parse(messageContent);
-        
-        // 广播消息到WebSocket客户端
-        this.broadcast(message);
-        
-        // 删除已处理的消息文件
-        fs.unlinkSync(uri.fsPath);
-      } catch (error) {
-        console.warn('处理消息文件时出错:', error);
-      }
+      // 添加小延迟确保文件写入完成
+      setTimeout(() => {
+        try {
+          if (fs.existsSync(uri.fsPath)) {
+            // 读取消息文件
+            const messageContent = fs.readFileSync(uri.fsPath, 'utf8');
+            const message = JSON.parse(messageContent);
+            
+            // 广播消息到WebSocket客户端
+            this.broadcast(message);
+            
+            // 删除已处理的消息文件
+            fs.unlinkSync(uri.fsPath);
+            
+            console.log('已处理并转发消息文件:', uri.fsPath);
+          }
+        } catch (error) {
+          console.warn('处理消息文件时出错:', uri.fsPath, error);
+        }
+      }, 100);
     });
   }
 }

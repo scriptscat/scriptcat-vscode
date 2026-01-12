@@ -8,6 +8,7 @@
 			"// @version      0.1.0",
 			"// @description  try to take over the world!",
 			"// @author       You",
+			"// @license      MIT",
 			"// ==/UserScript==",
 			"",
 			"// 在此处键入代码……"
@@ -23,6 +24,7 @@
 			"// @version      0.1.0",
 			"// @description  try to take over the world!",
 			"// @author       You",
+			"// @license      MIT",
 			"// @background",
 			"// ==/UserScript==",
 			"",
@@ -42,6 +44,7 @@
 			"// @version      0.1.0",
 			"// @description  try to take over the world!",
 			"// @author       You",
+			"// @license      MIT",
 			"// @crontab      * * once * *",
 			"// ==/UserScript==",
 			"",

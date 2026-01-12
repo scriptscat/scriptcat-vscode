@@ -3,7 +3,7 @@
   "displayName": "scriptcat-vscode",
   "description": "tampermonkey,userscript,scriptcat辅助开发扩展",
   "repository": "https://github.com/scriptscat/scriptcat-vscode",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "publisher": "CodFrm",
   "icon": "icons/logo.png",
   "keywords": [
@@ -48,6 +48,10 @@
       {
         "command": "scriptcat.autoTarget",
         "title": "切换到自动识别模式"
+      },
+      {
+        "command": "scriptcat.debug",
+        "title": "ScriptCat调试信息"
       }
     ]
   },
