@@ -66,7 +66,7 @@ class UserScriptHighlighter implements vscode.DocumentSemanticTokensProvider {
       // 处理元数据块内的内容
       if (inMetadata) {
         // 匹配 @key value 格式，支持空值的情况
-        const metaMatch = trimmedLine.match(/^\/\/\s+@(\w+)(?:\s+(.*?))?$/);
+        const metaMatch = trimmedLine.match(/^\/\/\s+@([\w-]+)(?:\s+(.*?))?$/);
         if (metaMatch) {
           const key = metaMatch[1];
           const value = metaMatch[2] || "";
@@ -82,7 +82,9 @@ class UserScriptHighlighter implements vscode.DocumentSemanticTokensProvider {
               new vscode.Position(i, keyStartIndex),
               new vscode.Position(i, keyEndIndex)
             );
-            builder.push(keyRange, TokenTypes.metaKey, [TokenModifiers.default]);
+            builder.push(keyRange, TokenTypes.metaKey, [
+              TokenModifiers.default,
+            ]);
           }
 
           // 高亮键值（如果存在）
@@ -94,7 +96,9 @@ class UserScriptHighlighter implements vscode.DocumentSemanticTokensProvider {
                 new vscode.Position(i, valueStartIndex),
                 new vscode.Position(i, valueEndIndex)
               );
-              builder.push(valueRange, TokenTypes.metaValue, [TokenModifiers.default]);
+              builder.push(valueRange, TokenTypes.metaValue, [
+                TokenModifiers.default,
+              ]);
             }
           }
         }

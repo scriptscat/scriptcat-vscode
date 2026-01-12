@@ -30,11 +30,14 @@ const VALID_META_KEYS = new Set([
   "match",
   "exclude",
   "require",
+  "require-css",
   "resource",
   "grant",
   "noframes",
   "connect",
   "run-at",
+  "run-in",
+  "inject-into",
   "unwrap",
 
   // 其他常见键名
@@ -44,6 +47,12 @@ const VALID_META_KEYS = new Set([
   "incompatible",
   "antifeature",
   "note",
+
+  // ScriptCat 特有键名
+  "early-start",
+  "background",
+  "crontab",
+  "storageName",
 ]);
 
 // 诊断键名
