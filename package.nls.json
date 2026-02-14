@@ -1,7 +1,7 @@
 {
   "display-name": "scriptcat-vscode",
   "extension-description": "VS Code extension to assist development of userscripts for ScriptCat and Tampermonkey, with smart script detection and workflow support.",
-  "scriptcat-target": "Set sync script path",
-  "scriptcat-auto-target": "Toggle auto-detect mode",
-  "scriptcat-debug": "Show ScriptCat debug information"
+  "scriptcat-target": "ScriptCat: Set Sync Script Path",
+  "scriptcat-auto-target": "ScriptCat: Toggle to Auto-Detect Mode",
+  "scriptcat-debug": "ScriptCat: Show Debug Information"
 }

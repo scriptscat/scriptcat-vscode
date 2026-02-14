@@ -1,7 +1,7 @@
 {
   "display-name": "scriptcat-vscode",
   "extension-description": "在 VS Code 中協助 ScriptCat 和 Tampermonkey 使用者腳本開發的擴充套件，提供智慧腳本識別及工作流程支援。",
-  "scriptcat-target": "指定同步腳本路徑",
-  "scriptcat-auto-target": "切換到自動識別模式",
-  "scriptcat-debug": "ScriptCat 偵錯資訊"
+  "scriptcat-target": "ScriptCat: 設定同步腳本路徑",
+  "scriptcat-auto-target": "ScriptCat: 切換到自動識別模式",
+  "scriptcat-debug": "ScriptCat: 顯示偵錯資訊"
 }

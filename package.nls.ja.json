@@ -1,7 +1,7 @@
 {
   "display-name": "scriptcat-vscode",
   "extension-description": "VS Code 拡張機能：ScriptCat と Tampermonkey のユーザースクリプト開発を支援し、スマートなスクリプト検出とワークフローサポートを提供します。",
-  "scriptcat-target": "同期スクリプトのパスを指定",
-  "scriptcat-auto-target": "自動検出モードに切り替え",
-  "scriptcat-debug": "ScriptCat のデバッグ情報を表示"
+  "scriptcat-target": "ScriptCat: 同期スクリプトのパスを設定",
+  "scriptcat-auto-target": "ScriptCat: 自動検出モードに切り替え",
+  "scriptcat-debug": "ScriptCat: デバッグ情報を表示"
 }
