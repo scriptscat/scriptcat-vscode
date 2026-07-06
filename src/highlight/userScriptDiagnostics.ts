@@ -5,7 +5,7 @@ import * as vscode from "vscode";
  * 用于检测无效的元数据键名并提供修复建议
  */
 
-// 标准 UserScript 元数据键名白名单
+// Tampermonkey UserScript 元数据键名白名单，并保留 ScriptCat 自有扩展键名
 const VALID_META_KEYS = new Set([
   // 核心元数据
   "name",
@@ -13,8 +13,10 @@ const VALID_META_KEYS = new Set([
   "version",
   "description",
   "license",
+  "copyright",
 
   // 脚本关联
+  "defaulticon",
   "icon",
   "iconURL",
   "icon64",
@@ -22,8 +24,10 @@ const VALID_META_KEYS = new Set([
   "updateURL",
   "downloadURL",
   "supportURL",
+  "homepage",
   "homepageURL",
-  "contributionURL",
+  "website",
+  "source",
 
   // 兼容性
   "include",
@@ -38,15 +42,14 @@ const VALID_META_KEYS = new Set([
   "run-at",
   "run-in",
   "inject-into",
+  "sandbox",
+  "webRequest",
   "unwrap",
 
-  // 其他常见键名
+  // 其他 Tampermonkey 键名
   "author",
-  "copyright",
-  "compatible",
-  "incompatible",
   "antifeature",
-  "note",
+  "tag",
 
   // ScriptCat 特有键名
   "early-start",
@@ -55,9 +58,30 @@ const VALID_META_KEYS = new Set([
   "storageName",
 ]);
 
+const LOCALIZABLE_META_KEYS = new Set(["antifeature", "description", "name"]);
+
 // 诊断键名
 const DIAGNOSTIC_SOURCE = "UserScript";
 const INVALID_META_KEY_CODE = "invalid.meta.key";
+
+/**
+ * 判断元数据键名是否为已支持的 UserScript 键名
+ */
+export function isValidMetaKey(key: string): boolean {
+  const colonIndex = key.indexOf(":");
+  if (colonIndex > 0 && LOCALIZABLE_META_KEYS.has(key.slice(0, colonIndex))) {
+    return true;
+  }
+  return VALID_META_KEYS.has(key);
+}
+
+/**
+ * 从一行元数据注释中提取完整键名
+ */
+export function parseMetaKeyFromLine(lineText: string): string | null {
+  const metaMatch = lineText.trim().match(/^\/\/\s+@(\S+)(?:\s+.*?)?$/);
+  return metaMatch ? metaMatch[1] : null;
+}
 
 /**
  * 计算两个字符串的编辑距离（用于拼写建议）
@@ -138,10 +162,9 @@ class UserScriptDiagnosticsProvider implements vscode.CodeActionProvider {
             .map((key) => key.replace(/^@/, ""));
           const line = document.lineAt(diagnostic.range.start.line);
           const trimmedLine = line.text.trim();
-          const metaMatch = trimmedLine.match(/^\/\/\s+@(\w+)/);
+          const invalidKey = parseMetaKeyFromLine(trimmedLine);
 
-          if (metaMatch) {
-            const invalidKey = metaMatch[1];
+          if (invalidKey) {
             const atIndex = line.text.indexOf("@");
             const keyStart = atIndex + 1;
             const keyEnd = keyStart + invalidKey.length;
@@ -211,12 +234,11 @@ class DiagnosticsManager {
 
       // 处理元数据块内的内容
       if (inMetadata) {
-        const metaMatch = trimmedLine.match(/^\/\/\s+@(\w+)(?:\s+(.*?))?$/);
-        if (metaMatch) {
-          const key = metaMatch[1];
+        const key = parseMetaKeyFromLine(trimmedLine);
+        if (key) {
 
           // 检查键名是否有效
-          if (!VALID_META_KEYS.has(key)) {
+          if (!isValidMetaKey(key)) {
             const atIndex = line.indexOf("@");
             const keyStart = atIndex + 1;
             const keyEnd = keyStart + key.length;
