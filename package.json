@@ -3,7 +3,7 @@
   "displayName": "scriptcat-vscode",
   "description": "VS Code extension to assist development of userscripts for ScriptCat and Tampermonkey, with smart script detection and workflow support.\n用于在 VS Code 中辅助 ScriptCat 和 Tampermonkey 用户脚本开发的扩展，提供智能脚本识别与工作流程支持。",
   "repository": "https://github.com/scriptscat/scriptcat-vscode",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "publisher": "CodFrm",
   "icon": "icons/logo.png",
   "packageManager": "pnpm@10.29.2",
