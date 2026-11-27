@@ -33,21 +33,13 @@
         "path": "./snippets/scriptcat.json"
       }
     ],
-    "semanticTokenScopes": [
+    "grammars": [
       {
-        "language": "javascript",
-        "scopes": {
-          "metadata": [
-            "markup.bold"
-          ],
-          "metaKey": [
-            "entity.name.function",
-            "keyword.control"
-          ],
-          "metaValue": [
-            "string"
-          ]
-        }
+        "scopeName": "userscript-metadata.injection",
+        "path": "./syntaxes/userscript-metadata.tmLanguage.json",
+        "injectTo": [
+          "source.js"
+        ]
       }
     ],
     "commands": [

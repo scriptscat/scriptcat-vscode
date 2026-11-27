@@ -18,10 +18,5 @@
   "Secondary Window": "Secondary Window",
   "Running": "Running",
   "Stopped": "Stopped",
-  "Debug Information:\nWindow Role: {0}\nWebSocket Status: {1}\nPort: {2}\nShared Directory: {3}\nDirectory Exists: {4}": "Debug Information:\nWindow Role: {0}\nWebSocket Status: {1}\nPort: {2}\nShared Directory: {3}\nDirectory Exists: {4}",
-  "ScriptCat recommends enabling semantic highlighting for better UserScript metadata highlighting experience": "ScriptCat recommends enabling semantic highlighting for better UserScript metadata highlighting experience",
-  "Enable Now": "Enable Now",
-  "Don't Show Again": "Don't Show Again",
-  "Semantic highlighting has been enabled!": "Semantic highlighting has been enabled!",
-  "You can always enable semantic highlighting by searching for 'Semantic Highlighting' in settings and setting it to true.": "You can always enable semantic highlighting by searching for 'Semantic Highlighting' in settings and setting it to true."
+  "Debug Information:\nWindow Role: {0}\nWebSocket Status: {1}\nPort: {2}\nShared Directory: {3}\nDirectory Exists: {4}": "Debug Information:\nWindow Role: {0}\nWebSocket Status: {1}\nPort: {2}\nShared Directory: {3}\nDirectory Exists: {4}"
 }
