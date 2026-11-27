@@ -1,0 +1,28 @@
+{
+  "scopeName": "userscript-metadata.injection",
+  "injectionSelector": "L:source.js - comment - string - meta.jsx.children - meta.userscript.metadata",
+  "patterns": [
+    {
+      "name": "meta.userscript.metadata.js",
+      "begin": "^[\\t ]*(// ==UserScript==)[\\t ]*$",
+      "beginCaptures": {
+        "1": { "name": "markup.bold.userscript.delimiter.js" }
+      },
+      "end": "^(?:[\\t ]*(// ==/UserScript==)[\\t ]*$|(?![\\t ]*(?://|$)))",
+      "endCaptures": {
+        "1": { "name": "markup.bold.userscript.delimiter.js" }
+      },
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.js",
+          "match": "^[\\t ]*(//)(?:[\\t ]+(@[\\w-]+(?::[\\w-]+)?)(?:[\\t ]+(\\S(?:.*\\S)?))?[\\t ]*|.*)$",
+          "captures": {
+            "1": { "name": "punctuation.definition.comment.js" },
+            "2": { "name": "keyword.control.userscript.key.js" },
+            "3": { "name": "string.unquoted.userscript.value.js" }
+          }
+        }
+      ]
+    }
+  ]
+}
